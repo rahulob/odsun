@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Separator } from "./ui/separator";
+import GoogleSigninButton from "./google-signin-button";
+import { Eye, EyeClosed, EyeOff } from "lucide-react";
 
 export function SignUpForm({
   className,
@@ -25,6 +28,7 @@ export function SignUpForm({
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -60,10 +64,17 @@ export function SignUpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardTitle className="text-2xl">Welcome to ODSUN</CardTitle>
+          <CardDescription>Only DSA site Ü need</CardDescription>
         </CardHeader>
         <CardContent>
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <GoogleSigninButton isLoading={isLoading} />
+          <div className="flex items-center gap-4 py-4">
+            <Separator className="flex-1" />
+            <p>or</p>
+            <Separator className="flex-1" />
+          </div>
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
@@ -81,13 +92,22 @@ export function SignUpForm({
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••••"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-0 right-0 p-2"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </div>
+                </div>
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -95,7 +115,8 @@ export function SignUpForm({
                 </div>
                 <Input
                   id="repeat-password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••••••"
                   required
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
