@@ -26,7 +26,7 @@ import { useRouter } from "next/navigation";
 
 export default function UserDropdownMenu({ user }: { user: any }) {
   const str = "1234";
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const logout = async () => {
     const supabase = createClient();
