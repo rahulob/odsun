@@ -1,113 +1,142 @@
-import HighlightedText from "@/components/ui/highlighted-text";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import Hint from "./hint";
+import HighlightedText from "@/components/ui/highlighted-text";
 
-const problem = {
-  title: "Two Sum",
-  difficulty: "Easy",
-  descrition:
-    "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.",
-  examples: [
-    {
-      input: "nums = [2,7,11,15], target = 9",
-      output: "[0,1]",
-      explanation: "Because nums[0] + nums[1] == 9, we return [0, 1].",
-    },
-    {
-      input: "nums = [3,2,4], target = 6",
-      output: "[1,2]",
-    },
-    {
-      input: "nums = [3,3], target = 6",
-      output: "[0,1]",
-    },
-  ],
-  constraints: [
-    "2 <= nums.length <= 104",
-    "-109 <= nums[i] <= 109",
-    "-109 <= target <= 109",
-    "Only one valid answer exists.",
-  ],
-  followUp:
-    "Can you come up with an algorithm that is less than `O(n^2)` time complexity?",
-  hints: [
-    "A really brute force way would be to search for all possible pairs of numbers but that would be too slow. Again, it's best to try out brute force solutions just for completeness. It is from these brute force solutions that you can come up with optimizations.",
-    "So, if we fix one of the numbers, say x, we have to scan the entire array to find the next number y which is value - x where value is the input parameter. Can we change our array somehow so that this search becomes faster?",
-    "The second train of thought is, without changing the array, can we use additional space somehow? Like maybe a hash map to speed up the search?",
-  ],
-};
+interface Example {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+interface Hint {
+  text: string;
+}
+export interface Problem {
+  id: string;
+  title: string;
+  difficulty: string;
+  description: string;
+  examples: Example[];
+  constraints: string;
+  tags: string[];
+  follow_up?: string;
+  hints?: Hint[];
+}
 
-export default function Description() {
+interface DescriptionProps {
+  problem: Problem;
+}
+
+export default function Description({ problem }: DescriptionProps) {
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case "Easy":
+        return "text-green-600";
+      case "Medium":
+        return "text-yellow-600";
+      case "Hard":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
+    }
+  };
+
   return (
-    <div className="h-screen overflow-auto pb-16 p-4">
+    <div className="h-screen overflow-auto pb-16 p-4 space-y-4">
+      {/* Tags */}
+      {problem.tags && problem.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {problem.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
       {/* Title and description */}
       <DescriptionCard>
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="font-bold text-2xl">{problem.title}</h1>
-          <DifficultyTag difficulty={problem.difficulty} />
-        </div>
+        <h1 className="font-bold text-2xl">{problem.title}</h1>
+        <span
+          className={`text-sm font-semibold ${getDifficultyColor(
+            problem.difficulty
+          )}`}
+        >
+          {problem.difficulty}
+        </span>
         <HighlightedText
-          text={problem.descrition}
+          text={problem.description}
           className="text-primary/60"
         />
       </DescriptionCard>
 
-      {/* EXAMPLES SECTION */}
-      <DescriptionCard title="Examples">
-        {problem.examples.map((example: any, idx: number) => (
-          <div
-            key={idx}
-            className="bg-secondary rounded-lg py-2 px-4 font-mono text-sm mb-2"
-          >
-            <div>
-              <span className="font-bold text-green-500">Input : </span>
-              <span className="">{example.input}</span>
-            </div>
-            <div>
-              <span className="font-bold text-green-600">Output: </span>
-              <span>{example.output}</span>
-            </div>
-            {example.explanation && (
-              <div className="pt-2 border-t border-primary mt-2">
-                <span className="text-primary/60 font-sans">
-                  <span className="font-semibold text-primary">
-                    Explanation:{" "}
-                  </span>
-                  {example.explanation}
-                </span>
+      {/* Examples */}
+      {problem.examples && problem.examples.length > 0 && (
+        <DescriptionCard title="Examples">
+          {problem.examples.map((example, index) => (
+            <div
+              key={index}
+              className="bg-secondary rounded-lg py-2 px-4 font-mono text-sm mb-2"
+            >
+              <div>
+                <span className="font-bold text-green-500">Input : </span>
+                <span className="">{example.input}</span>
               </div>
-            )}
-          </div>
-        ))}
-      </DescriptionCard>
-
-      {/* CONSTRAINTS */}
-      <DescriptionCard title="Constraints">
-        <ul className="space-y-2 text-base-content/90">
-          {problem.constraints.map((constraint: string, idx: number) => (
-            <li key={idx} className="flex gap-2">
-              <span className="text-primary">•</span>
-              <code className="text-sm">{constraint}</code>
-            </li>
+              <div>
+                <span className="font-bold text-green-600">Output: </span>
+                <span>{example.output}</span>
+              </div>
+              {example.explanation && (
+                <div className="pt-2 border-t border-primary mt-2">
+                  <span className="text-primary/60 font-sans">
+                    <span className="font-semibold text-primary">
+                      Explanation:{" "}
+                    </span>
+                    {example.explanation}
+                  </span>
+                </div>
+              )}
+            </div>
           ))}
-        </ul>
-      </DescriptionCard>
+        </DescriptionCard>
+      )}
+
+      {/* Constraints */}
+      {problem.constraints && (
+        <DescriptionCard title="Constraints">
+          <ul className="space-y-2 text-base-content/90">
+            {problem.constraints.split("\n").map((constraint, index) => (
+              <li key={index} className="flex gap-2">
+                <span className="text-primary">•</span>
+                <code className="text-sm">
+                  <HighlightedText text={constraint} />
+                </code>
+              </li>
+            ))}
+          </ul>
+        </DescriptionCard>
+      )}
 
       {/* Follow Up */}
-      {problem.followUp && (
+      {problem.follow_up && (
         <div className="border-l-4 border-blue-500 m-4 px-4">
           <p className="font-semibold mb-1">Follow-up:</p>
           <HighlightedText
             className="text-sm text-primary/60"
-            text={problem.followUp}
+            text={problem.follow_up}
           />
         </div>
       )}
 
       {/* Hints */}
-      {problem.hints.map((hint, idx) => (
-        <Hint hint={hint} index={idx} key={idx} />
-      ))}
+      {problem.hints && problem.hints.length > 0 && (
+        <div>
+          {problem.hints.map((hint, idx) => (
+            <Hint hint={hint.text} index={idx} key={idx} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
