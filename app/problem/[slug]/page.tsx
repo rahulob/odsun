@@ -38,7 +38,7 @@ export default function Problem() {
   const [error, setError] = useState("");
 
   const [code, setCode] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
 
   const supabase = createClient();
 

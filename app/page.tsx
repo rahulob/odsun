@@ -1,37 +1,99 @@
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/lib/utils";
+"use client";
+
 import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import DifficultyText from "@/components/ui/difficulty-text";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-1 w-full flex flex-col gap-20 items-center">
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
-          <main className="flex-1 flex flex-col gap-6 px-4">
-            <h2 className="font-medium text-xl mb-4">Next steps</h2>
-            {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-          </main>
-        </div>
-
-        <Link href={"/create-problem"}>Create problem</Link>
-
-        <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-          <p>
-            Powered by{" "}
-            <a
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-              target="_blank"
-              className="font-bold hover:underline"
-              rel="noreferrer"
-            >
-              Supabase
-            </a>
-          </p>
-        </footer>
-      </div>
+      <Table className="max-w-xl mx-auto mt-8">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Difficulty</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead></TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {problems?.map((problem, index) => (
+            <TableRow key={index}>
+              <TableCell>
+                <DifficultyText difficulty={problem.difficulty} />
+              </TableCell>
+              <TableCell>{problem.title}</TableCell>
+              <TableCell>
+                <Link
+                  href={`solution/${problem.title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  <Button variant="outline">Solution</Button>
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Link
+                  href={`problem/${problem.title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                >
+                  <Button>Solve</Button>
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
+
+const problems = [
+  {
+    title: "Contains Duplicate",
+    difficulty: "Easy",
+  },
+  {
+    title: "Valid Anagram",
+    difficulty: "Easy",
+  },
+  {
+    title: "Two Sum",
+    difficulty: "Easy",
+  },
+  {
+    title: "Group Anagrams",
+    difficulty: "Medium",
+  },
+  {
+    title: "Top K frequent Elements",
+    difficulty: "Medium",
+  },
+  {
+    title: "Encode and Decode Strings",
+    difficulty: "Medium",
+  },
+  {
+    title: "Product of Array Except Self",
+    difficulty: "Medium",
+  },
+  {
+    title: "Valid Sudoku",
+    difficulty: "Medium",
+  },
+  {
+    title: "Longest Consecutive Sequence",
+    difficulty: "Medium",
+  },
+];

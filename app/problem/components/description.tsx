@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Hint from "./hint";
 import HighlightedText from "@/components/ui/highlighted-text";
+import DifficultyText from "@/components/ui/difficulty-text";
 
 interface Example {
   input: string;
@@ -27,21 +28,8 @@ interface DescriptionProps {
 }
 
 export default function Description({ problem }: DescriptionProps) {
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy":
-        return "text-green-600";
-      case "Medium":
-        return "text-yellow-600";
-      case "Hard":
-        return "text-red-600";
-      default:
-        return "text-gray-600";
-    }
-  };
-
   return (
-    <div className="h-screen overflow-auto pb-16 p-4 space-y-4">
+    <div className="h-screen overflow-auto pb-16 p-2 space-y-4">
       {/* Tags */}
       {problem.tags && problem.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-6">
@@ -58,13 +46,7 @@ export default function Description({ problem }: DescriptionProps) {
       {/* Title and description */}
       <DescriptionCard>
         <h1 className="font-bold text-2xl">{problem.title}</h1>
-        <span
-          className={`text-sm font-semibold ${getDifficultyColor(
-            problem.difficulty
-          )}`}
-        >
-          {problem.difficulty}
-        </span>
+        <DifficultyText difficulty={problem.difficulty} />
         <HighlightedText
           text={problem.description}
           className="text-primary/60"
@@ -93,7 +75,7 @@ export default function Description({ problem }: DescriptionProps) {
                     <span className="font-semibold text-primary">
                       Explanation:{" "}
                     </span>
-                    {example.explanation}
+                    <HighlightedText text={example.explanation} />
                   </span>
                 </div>
               )}

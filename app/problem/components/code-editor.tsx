@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Editor from "@monaco-editor/react";
-import { PlayIcon } from "lucide-react";
+import { Check, PlayIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
   Select,
@@ -47,7 +47,7 @@ function CodeEditor({
             onClick={onRunCode}
             className="bg-green-600 hover:bg-green-700 text-primary ml-4"
           >
-            <PlayIcon className="size-4" />
+            <Check className="size-4" />
             Submit
           </Button>
         </div>
